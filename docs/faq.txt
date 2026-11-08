@@ -1,0 +1,363 @@
+﻿===================================================================
+
+      Fastboot 命令 报错分析篇
+
+___________________________________________________________________
+
+### 常见问题 1：waiting for device
+
+出现现象：
+
+电脑一直提示 waiting for device，等了半个多小时还是没有动静。
+
+原因分析：
+
+这表示未检测到 fastboot 设备。一般都是在没有进入 fastboot 下或者驱动没有正确安装的情况下才会出现此问题。
+
+解决方案：
+
+1. 请确认手机是不是进入了 AP Fastboot 模式，数据线是否是连接好，Motorola 驱动是否正常安装（查看“这台电脑->右键 管理->设备管理器”，出现 Android ADB Interface - Motorola ADB Interface 则证明驱动安装正确，如果有黄色 Fastboot xxx 的图标，则证明没有安装。右键点更新驱动程序软件 -> 浏览计算机以查找驱动程序软件 -> 从计算机设备驱动程序列表中选取 -> ADB Interface -> 下一步 -> Mot Composite ADB Interface -> 下一步 -> 是。即可）。
+
+2. 重进 Fastboot 模式，重新插拔数据线。
+
+
+### 常见问题 2：command write failed(Unkown error)
+
+出现现象：
+
+Fastboot 命令提示：command write failed(Unkown error)
+
+原因分析及解决方案：
+
+1. 数据线可能有问题，请尝试更换数据线。
+2. USB 口有问题。此情况有些机友遇到过，换个 USB 接口没事了。由于电流或者电压不足，会导致 Fastboot 协议出错、丢包。
+3. AMD CPU 或主板问题。Ryzen 系列 CPU 在 USB3.0 接口上会遇到遇到此问题。请参考下面的解决方案，或尝试使用 USB2.0 集线器(HUB) 将 USB3.0 转为 USB2.0，或尝试更换电脑。
+4. 极个别现象：Windows 系统本身的问题。不要上网上找那些 Ghost、纯净、一键装机版，有可能会由于制作者误精简某些功能组件，从而导致无法使用 Fastboot 命令。
+5. Fastboot 工具和其他软件冲突或被其它软件阻止。另外金山类软件不推荐用。出现此错误时尝试卸载 杀毒/安全类软件例如金山）试试。某些国产杀毒软件是没法真正关掉的，只能卸载。
+6. 假如是 Moto Z 系列的设备，请将 Moto Mods 模块拆下来再执行命令。
+
+### 常见问题 3：command write error(Invalid argument)
+
+出现现象：
+
+Fastboot 命令提示：command write failed(Invalid argument)
+
+原因分析及解决方案：
+
+1. 数据线可能有问题，请尝试更换数据线。
+2. USB 口有问题。此情况有些机友遇到过，换个 USB 接口没事了。由于电流或者电压不足，会导致 Fastboot 协议出错、丢包。
+3. AMD CPU 或主板问题。Ryzen 系列 CPU 在 USB3.0 接口上会遇到遇到此问题。请参考下面的解决方案，或尝试使用 USB2.0 集线器(HUB) 将 USB3.0 转为 USB2.0，或尝试更换电脑。
+4. 极个别现象：Windows 系统本身的问题。不要上网上找那些 Ghost、纯净、一键装机版，有可能会由于制作者误精简某些功能组件，从而导致无法使用 Fastboot 命令。
+5. Fastboot 工具和其它软件冲突或被其他软件阻止。另外金山类软件不推荐用。出现此错误时尝试卸载 杀毒/安全类软件（例如金山）试试。某些国产杀毒软件是没法真正关掉的，只能卸载。
+6. 假如是 Moto Z 系列的设备，请将 Moto Mods 模块拆下来再执行命令。
+
+### 常见问题 4：Preflash validation failed
+
+出现现象 1：
+
+Fastboot 命令提示：Preflash validation failed
+
+手机提示：Partition (xxxx) Security Version Downgraded（注意这里的 xxxx 指的是刷写的分区名，例如 boot）
+
+原因分析：
+
+1. 此情况出现的问题几率极大，一般占了 6、7 成。这英文的意思是：刷写信息验证失败。一般是镜像的 BL 等级低于手机本身的 BL 等级。如果要刷入的镜像等级比手机的低，是无法刷写的，会出现报错（例如手机未解锁，手机原来刷了 4.4.2，现在刷的却是 4.2 的，抱歉，无法刷入）。
+
+解决方案：
+
+1. 刷最新的固件。
+
+出现现象 2：
+
+Fastboot 命令提示：Preflash validation failed
+
+手机提示：Invalid image size for partition xxxx
+
+原因分析：
+
+1. 刷了自定义的镜像。例如手机是未解锁的机器，刷了自定义内核或者 TWRP Recovery 等，就会提示这个。
+
+解决方案：
+
+1. 解锁 Bootloader。
+
+出现现象 3：
+
+Fastboot 命令提示：Preflash validation failed
+
+手机提示：Failed to hab check for xxxx: 0x56
+
+原因分析：
+
+1. 刷了非自己设备所在 CID 区域内的镜像。请检查镜像的 CID 是否与设备的 CID 区域一致（例如手机是 ATT 版的，想要刷的却是加拿大版的，很抱歉，无法刷入，ATT 版未解锁之前是不可以刷加拿大版的官方固件的）。
+
+解决方案：
+
+1. 刷自己运营商的固件。
+
+### 常见问题 5：error: cannot load 'xxxxxx': No error
+
+原因分析：
+
+出现此问题的原因是无法加载此镜像。
+
+1. 镜像名可能没写正确，或者目录内没有有此镜像。
+2. 镜像名大小写不正确。
+3. 目录名可能有空格或特殊字符，或者是目录名太长。
+  
+解决方案：
+
+1. 建议直接把镜像拖到命令提示符窗口，这样会自动加载镜像所在目录，很方便。
+2. 注意文件名和目录要写正确。注意大小写。
+3. 目录名不要太长，不要放桌面上，不要包含空格。
+
+### 常见问题 6：cannot determine image filename for 'xxxxxxxxx'
+
+原因分析：
+
+1. 英文意思为：无法检测分区。
+
+解决方案：
+
+1. 请检查输入的 Fastboot 命令是否忘记输入空格（直接把镜像拖到命令提示符窗口时，有很多人忘记加一个空格隔开参数）。所以会导致这个问题。
+2. 请检查分区名称是不是输错了。
+
+### 常见问题 7：InFono such partition
+
+原因分析：
+
+1.报错内容中文解释为：没有此分区。出现这种问题一般是要刷写的分区名写错了，就会出现这种情况。
+
+解决方案：
+
+1. 请检查输入的 Fastboot 命令。
+
+### 常见问题 8：status read failed(too many links)
+
+原因分析：
+
+1. 这种问题原因和"command write failed(Unkown error)"的报错原因差不多，一个是读失败，一个是写失败。
+
+解决方案：
+
+1. 请看上面问题 2 的解决思路。
+
+### 常见问题 9：刷写某镜像等了老半天
+
+原因分析：
+
+较老的电脑一般刷写如 system、super 等较大的分区镜像时，才需要等很长时间，正常情况下响应时间不会超过 1 分钟。
+
+1. 数据线或者 USB 接口可能有问题，电流或者电压不足，导致 Fastboot 协议出错、丢包。
+2. AMD CPU 或主板问题。Ryzen 系列 CPU 在 USB3.0 接口上会遇到遇到此问题。
+3. Fastboot 程序版本可能不对。
+4. 极个别现象：Windows 系统本身的问题，或者电脑的配置太低，内存不足，无法正常写入，此问题一般很少见了。
+
+解决方案：
+
+1. 尝试换数据线。
+2. 尝试换个 USB 接口。
+3. 请参考下面的解决方案，或尝试使用 USB2.0 集线器(HUB) 将 USB3.0 转为 USB2.0。
+4. 尝试换台电脑。
+
+### 常见问题 10：data transfer failure (too many links)
+
+原因分析：
+
+报错内容翻译为：数据传输失败。
+
+1. 不小心碰到了数据线或者 USB 口，导致设备与电脑的连接断开。
+2. 电脑 USB 接口或者设备 USB 接口接触不良，导致设备与电脑的连接断开。
+
+解决方案：
+
+1. 刷机过程中请不要碰手机！
+
+### 常见问题 11：Requseted download size is more than max allowed
+
+原因分析：
+
+1. 固件是损坏的，或和设备不匹配。
+2. 数据线或 USB 接口是坏的，电流或者电压不足，导致 Fastboot 协议出错、丢包。
+3. AMD CPU 或主板问题。Ryzen 系列 CPU 在 USB3.0 接口上会遇到遇到此问题。
+4. Windows 系统本身有问题。
+
+解决方案：
+
+1. 尝试换数据线。
+2. 尝试换个 USB 接口。
+3. 请参考下面的解决方案，或尝试使用 USB2.0 集线器(HUB) 将 USB3.0 转为 USB2.0。
+4. 尝试换台电脑。
+
+### 常见问题 12：FAILED (remote: unknown command)
+
+原因分析：
+
+1. 命令写错了。
+2. 数据线或 USB 接口是坏的，电流或者电压不足，导致 Fastboot 协议出错、丢包。
+3. AMD CPU 或主板问题。Ryzen 系列 CPU 在 USB3.0 接口上会遇到遇到此问题。
+4. Windows 系统本身有问题。
+
+解决方案：
+
+1. 尝试换数据线。
+2. 尝试换个 USB 接口。
+3. 请参考下面的解决方案，或尝试使用 USB2.0 集线器(HUB) 将 USB3.0 转为 USB2.0。
+4. 尝试换台电脑。
+
+### 常见问题 13：target didn't report max-download-size
+
+原因分析：
+
+1. 数据线或 USB 接口是坏的，电流或者电压不足，导致 Fastboot 协议出错、丢包。
+2. AMD CPU 或主板问题。Ryzen 系列 CPU 在 USB3.0 接口上会遇到遇到此问题。
+3. Windows 系统本身有问题。
+
+解决方案：
+
+1. 尝试换数据线。
+2. 尝试换个 USB 接口。
+3. 请参考下面的解决方案，或尝试使用 USB2.0 集线器(HUB) 将 USB3.0 转为 USB2.0。
+4. 尝试换台电脑。
+
+### 常见问题 14：image bigger than partition
+
+原因分析：
+
+报错内容翻译为：所刷写的镜像比实际分区大。
+
+1. 命令可能写错了，或者镜像大小比手机实际分区还大。
+
+解决方案：
+
+1. 请检查输入的 Fastboot 命令。
+2. 请检查要刷入的固件。
+
+
+### 常见问题 15：Invalid parition name xxx__a
+
+原因分析：
+
+1. 由于 fastboot 版本不对，导致分区名多了一个下划线“_”，从而导致刷入分区失败。
+
+解决方案：
+
+1. 尝试更换 fastboot 程序版本。
+
+### 常见问题 16：cannot load 'xxxx' : Not enough space
+
+原因分析：
+
+1. 电脑可能无足够的内存空间。一般是老旧电脑刷写 system.img 等较大镜像时容易出现此类错误。
+2. Fastboot 程序版本可能不对。
+
+解决方案：
+
+1. 建议更换现代电脑。
+2. 尝试更换 Fastboot 程序。
+
+
+### 常见问题 17：Invalid parition name xxx
+
+原因分析：
+
+1. 分区名写错，无法识别。
+
+解决方案：
+
+1. 请检查输入的 Fastboot 命令。
+
+### 常见问题 18：remote: too much data to fit into memory
+
+原因分析：
+
+报错内容翻译为：太多的数据写入内存。
+
+1. Fastboot 程序本身可能不对。
+2. 分区镜像过大。
+
+### 常见问题 19：remote: Battery Low
+
+出现现象：
+
+Fastboot 命令提示：remote: Battery Low
+
+原因分析：
+
+1. 电池电量低，无法完成刷写。一般是电池电量低于 20%。这是老设备的报错提示，2017 年之后的设备不会再有此报错。
+
+解决方案：
+
+1. 如果是老旧设备，请先在 Fastboot 模式下充会儿电，充个 2 小时电满了再刷机。如果能开机，最好开机充，速度还快些（在 AP Fastboot Mode 下不要放到充电器上充电，不识别充电器，没效果的）。需要注意的是，工程线仅仅只能用来刷镜像，无法充电。
+Moto 2015 年之后的设备，基本上可以直接插入数据线使用 USB 供电，无需手机电池有电，当然在 Fastboot 模式下也不会为电池充电。
+
+___________________________________________________________________
+
+### 其它需要注意的地方：
+
+每次刷完镜像时，如果 Fastboot 程序出现报错内容，请不要急着重启手机，因为这样做必定会卡在 AP Fastboot Mode 界面。
+
+在一些老旧设备上，可能会提示 (Flash Failure)，（无论左上角显示 boot failure 还是 flash failure）但是能够选择 normal power up 开机，AP Fastboot Mode 界面底下也没有报错内容。
+
+解决方法：
+
+    A. 利用 Fastboot 命令随便刷入个镜像，例如 logo.bin（适用于 2014 年前的老设备）
+    B. 手动执行 Fastboot 命令：fastboot oem config bootmode ""
+
+### 常见电脑问题：
+
+常见问题 2、3、8、9、10、11、12、13 等，有可能是数据线、驱动或者电脑问题，或者 AMD 系列 CPU 或主板的问题，不要以为新买的电脑怎么会出问题，我帮机友处理问题遇到此情况，新买的超级本，刷机就是报错，重装了系统也报错，最后没想到换了一台较旧的台式机就好了。
+
+遭遇这种问题时，由于 Fastboot 协议丢包，命令返回结果总会丢一些字符或者多一些字符，看起来非常奇怪。
+
+例如执行 fastboot oem set_fb_mode 时，fastboot 会返回如下错误：
+
+(bootloader) 'fb_mode_s' is not a supported oem command
+(bootloader) See 'fastboot oem help'
+FAILED (remote: '')
+
+本应该是 fb_mode_set 却少了“et”。
+
+或者这样：
+
+(bootloader) slot-cou: not found
+(bootloader) slot-suffi: not found
+...
+(bootloader)  'fb_mode_setfixes' is not a supported oem command
+(bootloader) See 'fastboot oem help'
+FAILED (remote failure)
+
+slot-count 少了“nt”，slot-suffixes 少了“xes”，明明不该出现的“fixes”，却变成了命令。
+
+刷个镜像时，会显示：
+
+(bootloader) max-down: not found
+Sending 'logo' (2679 KB)        FAILED (remote: 'unknown command')
+Finished. Total time: 0.025s
+
+刷 GPT 时，会卡死在 sending，并显示奇怪英文报错：
+
+(bootloader) slot-countxes: not found
+(bootloader) slot-suf：not found
+(bootloader) slot-suffi: not found
+(bootloader) partition-typ: not found
+(bootloader) max-download-: not found
+target didn't report max-download-size
+sending 'partition' (206 KB)...
+
+遇到上述这些奇怪的报错，请查看一下这篇文章，可能会对您有所帮助：
+
+https://bbs.ixmoe.com/t/topic/25561
+
+如果还是不行请换数据线、接 USB2.0 集线器、换电脑。如果换了不是同一个地方或同一个型号的 10 台以上电脑、N 条数据线，或者接了 USB 2.0 集线器还是不行，那看看手机 USB 口是不是脏了，拿点尖细东西裹上布酒精擦一下试试。还是不行那就是手机硬件问题了。
+
+-------------------------------------------------------------------
+
+如果您遇到其它常见问题以外的问题，请通过社区发帖求助。
+
+https://bbs.ixmoe.com
+
+
+===================================================================
+
+最后修订：2021-03-21 上午 02:31

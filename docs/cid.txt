@@ -1,0 +1,331 @@
+--------------------------------------------------------------------------------
+ Motorola 用 CID (CustomerID) 来标识运营商和销售地。
+--------------------------------------------------------------------------------
+
+本文章更新日期为：2023-08-02
+
+请完整阅读本文章。后续 Motorola CID 策略可能与现有的不同，请以最新文章为准。
+
+文章更新链接为：https://bbs.ixmoe.com/t/topic/25104
+
+--------------------------------------------------------------------------------
+
+# 一、CID 代码的说明
+
+### 现有常见 CID 代码（2022 年以后）
+
+[0x000B] 中国大陆零售版、中国移动定制版、中国电信定制版
+[0x0032] T-Mobile 定制版、Boost 定制版等美国可解锁 BL 机型
+[0x0032] 零售版等一些支持解锁 BL 的型号
+[0x0033] TracFone 定制版
+[0x0033] AT&T 定制版、Cricket 定制版
+[0x0033] Verizon 定制版、Visable Mobile 零售版
+
+### 超级权限 CID
+
+注意，这些 CID 仅售后&工厂级权限才可更改，正常零售机型不会涉及。
+
+[0x0000] 超级权限，可任意刷任何区域的固件（相同机型）
+[0x00FF] 工厂超级权限，可使用工厂命令，但仅允许刷入工厂固件
+
+### 损坏的 CID
+
+[0xDEAD] CID 损坏未知，或不可读
+
+
+### 如何获取设备的 CID 代码
+
+在 Fastboot 模式下，使用 Fastboot 命令执行：`fastboot getvar cid`
+
+### 如何获取固件的 CID 代码
+
+使用 16 进制编辑器打开 vbmeta.img，ASCII 搜索 HAB_META，将会找到例如 `HAB_METAeqs_50` 类似的字符串。其中 `eqs` 为设备代号，`50` 为十进制的 CID 代码。
+
+--------------------------------------------------------------------------------
+
+# 二、软件通道
+
+自 2017 年起，Motorola 可以正常在关于手机中显示软件通道了。软件通道就是运营商的在线更新(OTA)推送渠道，您可以按此来找到合适的官方固件。
+您可以在汐梦镜像 (https://mirrors.lolinet.com) 上找到您需要的 Motorola 完整官方固件。
+
+
+## 现有的常见软件通道代表的运营商如下：
+
+### 中国大陆：
+
+RETCN ----- 中国大陆地区零售(Retail China)
+CMCC ------ 中国移动公司(CMCC China)
+CTCN ------ 中国电信公司(China Telecom)
+
+
+### 欧洲及亚太：
+
+EEGB ------ 英国 EE 电信公司(EE UK)
+O2GB ------ 西班牙电信 O2 英国公司(O2 UK)
+RETAPAC --- 亚太地区零售(Retail Asia) *
+RETEU ----- 欧洲地区零售(Retail Eurpo)
+RETGB ----- 英国地区零售(Retail UK)
+RETIN ----- 印度地区零售(India Retail)
+RETKR ----- 韩国零售(Korea Retail)
+RETMEA ---- 中东地区零售(Retail Middle East) *
+RETRU ----- 俄罗斯地区零售(Retail Russia)
+OPENEU ---- 欧洲地区零售(Poland)
+PLAYPL ---- 波兰 Play 通讯公司(Play Poland)
+PLUSPL ---- 波兰 Polkomtel 公司(Polkomtel Poland)
+Softbank -- 日本软银公司(Softbank Japan)
+VFEU ------ 沃达丰电信欧洲地区零售 (Vodafone Eurpo)
+TESCOGB --- Tesco 电信英国公司(Tesco Mobile UK)
+TELSTRA --- Telstra 电信澳洲公司(Telstra Asia) *
+TELEU ----- 塞尔维亚挪威电信公司(Telenor Serbia)
+TIMIT ----- TIM 电信意大利公司(TIM Italy)
+TRUETH ---- 泰国 True 公司(Thailand True)
+RETEU_DE -- 德国地区零售(Retail Germany) *
+RETEU_PL -- 波兰零售版(Retail Poland) *
+RETEU_RS -- 塞尔维亚零售(Retail Serbia) *
+RETEU_IS -- 冰岛共和国零售(Retail Iceland) *
+
+注：
+1. RETMEA 包含乌克兰地区零售(Retail Ukraine)、埃及地区零售(Retail Egypt)、中东地区零售(Retail Middle East)等，但部分机型已合并至 RETAPAC。
+2. RETAPAC 包含了一些在亚太地区零售的机型，例如在泰国、新加坡、日本、澳大利亚、香港、台湾等国家或地区零售的版本。
+3. 注意，某些欧洲零售版本，虽然软件通道都是 RETEU，但国家可能不同，推送的固件版本也不同，所以使用「软件通道_两位国际代码」的方式进行区分。国际代码参考：https://countrycode.org
+
+### 北美洲：
+
+ACG ------- 美国 CDMA 蜂窝网络运营商协会(Associated Carrier Group)
+AMZ ------- 美国亚马逊公司(Amazon Prime)
+ATT ------- 美国电话和电报公司(AT&T USA)
+BOOST ----- 美国 Boost Mobile 公司(Boost Mobile)
+CC -------- 美国 Consumer Cellular 公司(Consumer Cellular USA)
+COMCAST --- 美国康卡斯特集团公司(Comcast USA)
+CRICKET --- 美国 Cricket 无线公司(Cricket Wireless)
+FI -------- 美国谷歌 Fi 公司(Google Fi USA)
+METROPCS -- 美国 T-Mobile 公司 Metro PCS 品牌(Metro by T-Mobile)
+RETCA ----- 加拿大地区零售(Retail Canada)
+RETUS ----- 美国地区零售(Retail USA)
+Spectrum -- 美国特许通讯公司旗下 Spectrum 品牌(Spectrum by Charter Communications)
+TMO ------- 美国 T-Mobile 公司(T-Mobile USA)
+TracFone -- 美国 TracFone 无线公司(TracFone Wireless)
+USC ------- 美国蜂窝公司(US Cellular)
+VZW ------- 美国威瑞森无线公司(Verizon Wireless)
+RETUS_VS -- 美国 Visible 无线公司(Visible Wireless) *
+
+注：
+
+1. 为区分 Visible 及普通美国零售版，Visible 零售版将以 RETUS_VS 表示。
+
+### 拉丁美洲（中美洲及南美洲）：
+
+AMXMX ----- 美洲电信墨西哥 Telcel 公司(AmericaMovil Telecel Mexico)
+ATTMX ----- AT&T 墨西哥公司(AT&T Mexico)
+ALTMX ----- 墨西哥 Altlan Redes 公司(Altan Mexico)
+AMXBR ----- 美洲电信巴西 Claro 子公司(Claro Brazil)
+AMXCL ----- 美洲电信智利 Claro 子公司(Claro Chile)
+AMXCO ----- 美洲电信哥伦比亚 Claro 子公司(Claro Colombia)
+AMXPE ----- 美洲电信秘鲁 Claro 子公司(Claro - Peru)
+AMXLA ----- 美洲电信拉美地区零售(Claro Central America / Claro Puerto Rico / Claro El Salvador）
+OPENCL ---- 智利地区零售(Open Chile)
+OPENLA ---- 拉丁美洲零售(Open Latin America)
+OPENMX ---- 墨西哥地区零售(Open Mexico)
+OPENPE ---- 秘鲁地区零售 (Open Peru)
+RETAR ----- 阿根廷地区零售(Retail - Argentina)
+RETBR ----- 巴西地区零售(Retail Brazil)
+RETLA ----- 拉丁美洲地区零售(LATAM Generic / Retail Colombia)
+TEFBR ----- 西班牙电信巴西公司(Vivo Brazil)
+TEFMX ----- 西班牙电信墨西哥公司(Movistar Mexico)
+TIMBR ----- TIM 电信巴西公司(TIM Brazil)
+TIGCA ----- TIGO 危地马拉公司(Tigo Guatemala) *
+
+注：
+
+1. OPENLA 拉丁美洲地区零售，主要为拉美地区的开放运营商，无网络锁的版本。
+2. 带 OPEN 的都是无网络锁的版本。
+
+--------------------------------------------------------------------------------
+
+# 三、固件刷写说明
+
+#### 1. Bootloader(BL) 里的 CID 代码均以 16 进制表示，但固件上可能会使用十进制，您可能需要转换一下。
+
+例：固件上显示为 50，则对应的 CID 代码十六进制 0x0032。
+
+#### 2. 相同设备代号且相同 CID 代码的固件，AP 部分是可以通刷的，无需解锁 BL。但 BP 部分最好是只刷设备本身运营商的，其它运营商即使 CID 相同也要谨慎刷入。
+
+例：Motorola Edge 加拿大版 (XT2063-3, CID 0x0032) 可直接刷亚太版 (XT2063-3, CID 0x0032) 官方固件，因 BP 是相同的，所以可以直接刷。
+
+#### 3. 不解锁 BL 只能刷入相同设备代号、相同 CID 代码的相同或更高版本的官方固件，不能降级。
+
+例 1：有台 V 版 Motorola Edge+(CID 0x0002)，当前系统版本是 QPBS30.188-48，没解 BL 锁，那只能刷自己运营商的 QPBS30.188-48 固件，或更高版本固件（例如 QPBS30.188-48-3）。
+
+例 2：有台没解锁 BL 的国行设备，因为官方只更新到 Android 9.0，脑抽直接一键刷了零售版相同机型的 Android 10，只把 BL 部分刷进去了，其它部分报错。
+
+即使这样这台设备也彻底报废了，BL 升上去了您也没办法退回国行 9.0，您只有盼望官方推了 Android 10 您才有可能救回您的设备。
+
+例 3：有台国内零售 Moto X30 屏下版(XT2201-6, CID 0x000B, 代号 hiphid)，不解锁是不能刷入 Moto X30 普通版(XT2201-2, CID 0x000B, 代号 hiphic) 的。虽然 CID 相同，硬件也基本相同。
+
+#### 4. 解锁 BL 之后，相同设备代号但不同 CID 的固件，仅可刷入 AP 部分，刷错 BP 部分或 BL 部分后可能会变砖无法救回。
+
+例：Moto Z2 Force T-Mobile 版 (XT1789-04, CID 0x15, 代号 nash)，解锁 BL 后，只能刷零售版 (XT1789-06, CID 0x32, 代号 nash) 官方固件中的 AP 部分。
+刷错别的运营商的 BP 部分可能会让手机没信号、不能正确读取基带，表现为打不开射频，IMEI 为 0。
+刷到高版本基带没法降级回旧版本基带，即使解锁 BL 也没法降级，低版本基带虽然能刷进去，但会被 BL 禁止读取，在系统里会显示“基带未知”，WIFI 也打不开。
+这可能会让手机直接报废。刷 BP 部分之前请先确认机型和运营商。
+
+#### 5. 机型不同，不管 CID 是否相同，无论解不解 BL，都不能通刷任何部分，刷了可能很有可能会变砖。
+
+例：Moto Z2 Force Verizon 版 (XT1789-04, CID 0x0002, 代号 nash) 绝对不可刷入 Moto Z3 Verizon 版 (XT1929-17, CID 0x0002, 代号 messi) 官方固件，虽然 CPU 相同，但机型和设备代号不同。
+
+#### 6. 设备的 CID 代码永久不变。
+
+除非有工厂或售后级渠道，否则设备的 CID 代码是永远不会改变的。
+
+#### 7. 每个设备的 CID 证书都是唯一的。
+
+注意：不要尝试破解、还原（除本机外其它任何机型）、清空 CID 分区，设备该刷什么固件、运营商验证全靠 CID 分区中的证书，搞坏该分区会让您的设备直接变砖无法刷入任何东西，且无法开机。售后都救不回。
+
+--------------------------------------------------------------------------------
+
+
+# 四、CID 变动记录
+
+2015 年之前的机型：
+
+十六进制  运营商版本
+[0x0000] 美国零售版（废弃）
+[0x0001] ATT 定制版（废弃）
+[0x0002] Verizon 定制版
+[0x0003] 未知
+[0x0004] AU-KDDI 定制版（废弃）
+[0x0005] 韩国运营商零售版(SK/KT)（废弃）
+[0x0006] Republic Wireless 定制版（废弃）
+[0x0007] 欧洲、亚太地区零售或运营商定制版，例：英国、法国、O2、Orange 等运营商定制版（废弃）
+[0x0008] Bell 定制版（废弃）
+[0x0009] 美国零售，例如 T-Mobile、Sprint、US.Cellular、Boost、CC、ACG/ACGLTE、LRA（废弃）
+[0x000A] AIO 定制版
+[0x000B] 中国大陆地区零售
+[0x000C] 拉美地区零售版（废弃）
+[0x000D] 未知（废弃）
+[0x000E] 加拿大地区零售版（废弃）
+[0x000F] Tracfone 定制版（废弃）
+[0x0010] Cricket 定制版（废弃）
+[0x0032] 全球零售版
+[0x00DE] 谷歌开发者版（废弃）
+
+注：
+
+1. 0x0000 这个定制在 Moto X 二代用过，后期没有再用了。这个版本包括 Pure Edition 和 Developer Edition。
+2. 欧洲所有零售或运营商定制都是 0x0007，后期已废弃这个代码。
+
+--------------------------------------------------------------------------------
+
+2016 年新增或变动的机型：
+
+[0x0000] 工程机，未分销售地
+[0x0012] Amazon 定制版
+[0x0032] 全球零售的一些可解锁型号
+
+注：
+
+1. 在 Moto G5 上，亚马逊零售采用了 0x12 这个代码。
+
+--------------------------------------------------------------------------------
+
+2017 年新增或变动的机型：
+
+[0x0015] T-Mobile 定制版
+
+注意：
+1. 亚洲地区零售包括像香港/印度/澳大利亚/日本/沙特等这些亚洲地区的版本。
+2. 现在 Motorola 不分那么细致了，可解锁 Bootloader 的机型一般用 0x0032 代码。
+例如：美国零售、Sprint 定制版、US.Celluar 定制版、加拿大零售、亚太地区零售、欧洲零售、拉丁美洲零售等等。
+
+--------------------------------------------------------------------------------
+
+2022 年新增或变动的机型：
+
+[0x0032] T-Mobile 定制版、Boost 定制版等美国可解锁 BL 机型
+[0x0033] AT&T 定制版、Cricket 定制版
+[0x0033] Verizon 定制版、Visable Mobile 零售版
+
+
+注意：
+1. 美国不可解锁 BL 机型 CID 合并到 0x0033 代码上去了。
+
+--------------------------------------------------------------------------------
+
+# 五、基本已经废弃不再使用的软件通道介绍：
+
+欧洲及亚太：
+
+ALTFR ----- Altice 法国公司(Altice - France)
+AMZIN ----- 亚马逊印度定制版(Amazon India)
+BOUYFR ---- 法国 Bouygues 电信公司(Bouygues France)
+DTEU ------ 德国电信 T-Mobile 德国、荷兰、波兰公司(T-Mobile Netherlands / T-Mobile Poland / T-Mobile Germany)
+DTPL ------ T-Mobile 波兰公司(T-Mobile Poland) *
+RETDE ----- 德国地区零售(Retail Germany) *
+RETES ----- 西班牙地区零售(Retail Spain) *
+RETFR ----- 法国地区零售(Retail France) *
+RETID ----- 印度尼西亚地区零售(Retail Indonesia) *
+O2DE ------ 西班牙电信 O2 德国公司(O2 Germany)
+ORAFR ----- Orange 电信法国公司(Orange France) *
+ORAES ----- Orange 电信西班牙公司(Orange Spain) *
+ORAEU ----- Orange 电信欧洲地区零售 (Orange Eurpo)
+VFAU ------ 沃达丰电信澳洲公司(Vodafone Australia) *
+VFDE ------ 沃达丰电信德国公司(Vodafone Germany) *
+VFIT ------ 沃达丰电信意大利公司(Vodafone Italy) *
+VFGB ------ 沃达丰电信英国公司 (Vodafone UK)
+VFES ------ 沃达丰电信西班牙公司(Vodafone Spain) *
+VIPEU ----- 塞尔维亚 VIP Mobile 公司(VIPmobile)
+WINDIT ---- 意大利 Wind Tre 公司(Wind Italy) *
+TESCOIE --- Tesco 爱尔兰公司(Tesco Ireland) *
+AMZEU ----- 亚马逊欧洲定制版(Amazon Eurpo)
+RETEU_EMADA 波兰、罗马尼亚、英国、德国、塞尔维亚、西班牙零售
+
+注：
+1. DTPL 已废弃合并至 DTEU。
+2. RETDE RETFR RETES 已废弃合并至 RETEU。
+3. VFDE、VFES、VFIT 已废弃合并至 VFEU。
+4. RETID、TELSTRA、VFAU 已废弃合并至 RETAPAC。
+5. TESCOIE 已废弃合并至 TESCOGB。
+6. ORAFR、ORAES 已废弃合并至 ORAEU。
+7. OPENEU 包括波兰地区零售(Retail Poland)、挪威电信(Telenor)、挪威电信塞尔维亚(Telenor Serbia)等。
+8. 意大利 WIND 电信(Wind Telecomunicazioni S.p.A.)已与意大利和记电讯(3 Italy)合并为意大利 Wind Tre 公司(Wind Tre S.P.A.)。
+9. O2 是西班牙电信(Telefonica)的子品牌。
+
+北美洲：
+
+BWACA ----- 加拿大贝尔公司(Bell Canada)
+LRA ------- 美国威瑞森无线与农村地区运营商合作的美国乡村地区 LTE 网络计划(Verizon's LTE In Rural America Carriers)
+Sprint ---- 美国 T-Mobile 公司 Sprint 品牌 *
+TKPCA ----- 加拿大研科移动公司(Telus Canada)
+RCICA ----- 加拿大罗杰斯无线公司(Rogers Wireless Canada)
+WNDCA ----- 加拿大 Wind 无线公司(Wind Mobile Canada)
+
+1. LRA 运营商包括：Bluegrass Cellular、Cross Telephone、Pioneer Cellular、Cellcom、Thumb Cellular、Strata Networks、S and R Communications、Carolina West、Custer Telephone Cooperative、KPU Telecommunications、Chariton Valley Communication Corporation、Appalachian Wireless、Northwest Missouri Cellular、Chat Mobility、Matanuska Telephone Association、Wireless Partners、Triangle Communications、Nemont、Mid-Rivers Communications 和 Copper Valley Telecom。
+2. T-Mobile 现已收购 Sprint 旗下所有业务。
+3. Wind Mobile 现属于 Freedom Mobile Inc. 所有。
+4. BWACA、TKPCA、WNDCA 基本已经废弃不再使用，合并至 RETCA
+
+中美洲及南美洲：
+
+ENTCL ----- 智利 Entel 公司(Entel Chile)
+IUSMX ----- 墨西哥 Iusacell 公司(Mexico Iusacell) *
+NIIBR ----- 墨西哥 Nextel 公司巴西公司(Nextel Brazil) *
+NIICL ----- 墨西哥 Nextel 公司智利公司(Nextel Chile) *
+NIIPE ----- 智利 Entel 公司秘鲁公司(Entel Peru)
+OIBR ------ 巴西 Oi 公司(Oi (Telemar) Brazil)
+PERAR ----- 阿根廷 Personal 公司(Personal Argentina)
+RETCL ----- 智利地区零售(Retail Chile)
+RETLA1ST -- 拉美地区零售，带运营商锁(Retail LATAM First Locked)
+RETMX ----- 墨西哥地区零售(Retail Mexico)
+
+TEFCL ----- 西班牙电信阿根廷公司(Movistar Chile)
+TEFCO ----- 西班牙电信哥伦比亚公司(Movistar Colombia)
+TEFLA ----- 西班牙电信阿根廷公司(Movistar Argentina)
+TEFPE ----- 西班牙电信秘鲁公司(Movistar Peru)
+TEFUNL ---- 西班牙电信秘鲁公司(Movistar Peru) *
+TIGCO ----- TIGO 哥伦比亚公司(Tigo Colombia) *
+WOMCL ----- 智利 WOM 公司(WOM Chile)
+
+1. IUSMX 已废弃合并至 ATTMX，Iusacell 现属于 AT&T 墨西哥公司(AT&T Mexico)所有。
+2. TEFUNL 已废弃合并至 TEFPE。
+3. Nextel 公司以前归 NII 控股所有，后来与 Sprint-Nextel 合并。
+4. TIGO 是 Millicom International Cellular SA 的运营品牌。
