@@ -8,6 +8,7 @@
 
 ## 1. 目录
 
+
 ```
 /sdcard/TFS_Android/
 ├── tfs.sh          主脚本（菜单 + XML 刷写引擎 + 日志）
@@ -29,6 +30,7 @@
 
 ## 2. 先部署（只要一次）
 
+
 ```sh
 su -c "sh /sdcard/TFS_Android/deploy.sh"
 ```
@@ -38,6 +40,7 @@ su -c "sh /sdcard/TFS_Android/deploy.sh"
 ---
 
 ## 3. MT 管理器扩展包配置
+
 
 1. MT 管理器 → 侧滑菜单 → **设置** → **扩展包**（不同版本叫「自定义命令」/「脚本」）→ 新建。
 2. 命令填：
@@ -57,6 +60,7 @@ sh /sdcard/TFS_Android/run.sh
 ---
 
 ## 4. 菜单
+
 
 屏幕上每项占两行：第一行是功能名，第二行是 `[键]` 加参数说明，输入键加回车执行。
 
@@ -85,6 +89,7 @@ sh /sdcard/TFS_Android/run.sh
 ---
 
 ## 5. 非交互（脚本里调、批处理、自动化）
+
 
 ```sh
 sh /data/local/tmp/tfs/tfs.sh check                  # 环境自检
@@ -125,6 +130,7 @@ sh /data/local/tmp/tfs/tfs.sh /sdcard/boot.img       # img → 推断分区刷
 
 ## 6. 安全默认值（对齐 TFS 的「保留数据」逻辑）
 
+
 - **KEEP_DATA=1**：XML 里的 `erase` 一律跳过；要清数据用 `--factory` 或菜单 [7]。
 - **跳过分区表**：`cid carrier cdt utags devinfo frp persist modemst1 modemst2 fsg logo_a logo_b`
 - 危险操作（erase userdata/metadata、unlock）非交互环境下**默认不执行**，必须 `--yes`。
@@ -135,6 +141,7 @@ sh /data/local/tmp/tfs/tfs.sh /sdcard/boot.img       # img → 推断分区刷
 ---
 
 ## 7. 与原版 TFS 的差异
+
 
 | 原版（Windows） | 本版（Android sh） |
 |---|---|
@@ -150,6 +157,7 @@ sh /data/local/tmp/tfs/tfs.sh /sdcard/boot.img       # img → 推断分区刷
 
 ## 8. 常见问题
 
+
 - **`err: 未检测到 fastboot 设备`** → 目标机没进 bootloader、OTG 线是充电线、或没 root。
 - **`CANNOT LINK EXECUTABLE`** → `lib/` 没复制全，重跑 `deploy.sh`。
 - **adb 报 `Cannot mkdir '//.android'`** → HOME 不可写；本版已自动把 HOME 指到 `/data/local/tmp/tfs`。
@@ -157,7 +165,9 @@ sh /data/local/tmp/tfs/tfs.sh /sdcard/boot.img       # img → 推断分区刷
 - **换机/换平台** → 只改 `SKIP_LIST`，XML 引擎不分平台。
 
 ---
+
 ## 9. 本地增强（相对原版 TFS 1.10.6）
+
 
 | 项目 | 行为 |
 |---|---|
@@ -175,8 +185,8 @@ sh -n /sdcard/TFS_Android/tfs.sh && echo syntax_ok
 ---
 
 ## 仓库文件清单（可直接 clone 使用）
+仓库含完整可运行文件：脚本 + 配置 + 文档 + ROM 样例 + aarch64 二进制，clone 下来即可直接跑。
 
-本仓库只放纯文本源码，二进制不进版本库（避免历史臃肿）。
 
 ```
 tfs.sh                     主脚本，921 行 POSIX sh
@@ -188,29 +198,32 @@ docs/faq.txt               常见问题
 docs/changelog.txt         变更记录
 rom/sample/flashfile.xml   刷机 XML 样例（erase all）
 rom/sample/servicefile.xml 刷机 XML 样例（保数据）
+bin/adb                     adb（3.5MB, aarch64）
+bin/fastboot                fastboot（2.4MB, aarch64）
+lib/                        107 个 aarch64 依赖库（12MB）
+LICENSE                     MIT
 ```
 
 ## 拉取与运行
 
+
 ```sh
 git clone https://github.com/Wan1337/tfs-android.git ~/tfs
 cd ~/tfs
+chmod +x tfs.sh deploy.sh run.sh bin/*
+sh deploy.sh          # 部署到 /data/local/tmp/tfs 并重新赋权（需 root）
+sh tfs.sh             # 直接跑
+alias tfs='sh /data/local/tmp/tfs/tfs.sh'
 ```
 
-`bin/`（fastboot + adb）与 `lib/`（107 个 aarch64 依赖库）共 18MB，不入仓库，
-从 Release 取完整包：
+仓库已自带 `bin/`（fastboot + adb，5.8MB）与 `lib/`（107 个 aarch64 依赖，12MB），
+clone 下来就是完整可跑的，不需要再另外下载东西。
 
-```sh
-curl -L -o /tmp/tfs-full.tar.gz \
- https://github.com/Wan1337/tfs-android/releases/download/v1.11.0-sh/TFS-Android-aarch64-v1.11.0-sh.tar.gz
-tar -xzf /tmp/tfs-full.tar.gz -C ~/tfs --skip-old-files
-chmod +x ~/tfs/tfs.sh ~/tfs/bin/*
-sh ~/tfs/deploy.sh
-sh ~/tfs/tfs.sh
-```
-
-`chmod +x` 不能省，漏了就是 `adb: Permission denied`。
+`chmod +x` 那行不能省：`/sdcard`（sdcardfs/fuse）上 chmod 位无效，
+而 git 在部分环境克隆后会丢掉执行位，`deploy.sh` 会把文件复制到
+`/data/local/tmp/tfs/` 再重新 `chmod 755`，所以最终执行的是那份副本。
 
 ## License
+
 
 MIT License，见仓库根目录 LICENSE 文件。Copyright (c) 2026 Wan1337。
