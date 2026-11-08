@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flashing>
+  <steps interface="AP">
+    <step operation="flash" partition="boot" filename="boot.img"/>
+    <step operation="flash" partition="cid" filename="cid.img"/>
+    <step operation="flash" partition="system" filename="nothere.img"/>
+    <step operation="erase" partition="userdata"/>
+  </steps>
+  <steps interface="BP">
+    <step operation="flash" partition="modem" filename="modem.img"/>
+  </steps>
+</flashing>

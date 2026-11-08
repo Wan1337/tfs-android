@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flashing>
+  <header><phone_model model="avr"/></header>
+  <steps interface="AP">
+    <step operation="flash" partition="boot" filename="boot.img"/>
+    <step operation="flash" partition="vendor_boot" filename="vendor_boot.img"/>
+    <step operation="erase" partition="userdata"/>
+    <step operation="oem" var="fb_mode_set"/>
+  </steps>
+  <steps interface="BP">
+    <step operation="flash" partition="modem" filename="modem.img"/>
+  </steps>
+</flashing>

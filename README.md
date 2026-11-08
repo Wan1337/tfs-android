@@ -171,3 +171,42 @@ sh /data/local/tmp/tfs/tfs.sh /sdcard/boot.img       # img → 推断分区刷
 ```sh
 sh -n /sdcard/TFS_Android/tfs.sh && echo syntax_ok
 ```
+
+---
+
+## 仓库文件清单（可直接 clone 使用）
+
+本仓库只放纯文本源码，二进制不进版本库（避免历史臃肿）。
+
+```
+tfs.sh                     主脚本，921 行 POSIX sh
+run.sh                     入口包装（MT 管理器扩展包指向它）
+deploy.sh                  部署到 /data/local/tmp/tfs 并 chmod
+config.conf                跳过分区 / 保留数据 / 覆盖确认等开关
+docs/cid.txt               CID 对照表
+docs/faq.txt               常见问题
+docs/changelog.txt         变更记录
+rom/sample/flashfile.xml   刷机 XML 样例（erase all）
+rom/sample/servicefile.xml 刷机 XML 样例（保数据）
+```
+
+## 拉取与运行
+
+```sh
+git clone https://github.com/Wan1337/tfs-android.git ~/tfs
+cd ~/tfs
+```
+
+`bin/`（fastboot + adb）与 `lib/`（107 个 aarch64 依赖库）共 18MB，不入仓库，
+从 Release 取完整包：
+
+```sh
+curl -L -o /tmp/tfs-full.tar.gz \
+ https://github.com/Wan1337/tfs-android/releases/download/v1.11.0-sh/TFS-Android-aarch64-v1.11.0-sh.tar.gz
+tar -xzf /tmp/tfs-full.tar.gz -C ~/tfs --skip-old-files
+chmod +x ~/tfs/tfs.sh ~/tfs/bin/*
+sh ~/tfs/deploy.sh
+sh ~/tfs/tfs.sh
+```
+
+`chmod +x` 不能省，漏了就是 `adb: Permission denied`。

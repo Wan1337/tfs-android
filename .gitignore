@@ -1,7 +1,3 @@
-bin/
-lib/
 logs/
-rom/
-config.conf
 *.bak
 *.log
