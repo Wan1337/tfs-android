@@ -210,3 +210,7 @@ sh ~/tfs/tfs.sh
 ```
 
 `chmod +x` 不能省，漏了就是 `adb: Permission denied`。
+
+## License
+
+MIT License，见仓库根目录 LICENSE 文件。Copyright (c) 2026 Wan1337。
